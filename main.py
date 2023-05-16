@@ -1,6 +1,7 @@
 import os
 from flask import jsonify
-
+from collections import OrderedDict
+import string
 from flask import Flask, render_template, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
@@ -80,15 +81,23 @@ if not os.path.isfile('sqlite:///childposhandata.db'):
         db.create_all()
 
 
-# index page
 @app.route('/')
+def homepage():
+    return 'hello world'
+
+
+# index page
+@app.route('/add')
 def home():
-    s_name = 'Himachal Pradesh'
-    d_name = 'Kangra'
-    b_name = 'Bhawarna'
-    se_name = 'Bhawarna'
-    a_name = 'Bhatti'
-    v_name = 'Bhawarna'
+    s_name = string.capwords('himachal Pradesh')
+
+    d_name = string.capwords('Kangra')
+
+    b_name = string.capwords('Bhawarna')
+
+    se_name = string.capwords('Bhawarna')
+    a_name = string.capwords('Bhatti')
+    v_name = string.capwords('Bhawarna')
 
     check_state_available = State.query.filter_by(state_name=s_name).first()
     check_district_available = District.query.filter_by(district_name=d_name).first()
@@ -169,43 +178,53 @@ def home():
 @app.route('/api')
 def all_data():
     states = db.session.query(State).all()
+    # data = OrderedDict()
     data = []
     for state in states:
         state_dict = {
-            'State': state.state_name,
-            'Districts': []
+            state.state_name: [{
+                'Districts': [],
+            }],
+
         }
         for district in state.districts:
             district_dict = {
-                'District_Name': district.district_name,
+                district.district_name: [{
                 'Blocks': [],
+                }],
             }
             for block in district.blocks_d_s:
                 block_dict = {
-                    'Block_Name': block.block_name,
-                    'Sectors': []
+                    block.block_name: [{
+                        'Sectors': []
+                    }],
+
                 }
                 for sector in block.sectors:
                     sector_dict = {
-                        'Sector_Name': sector.sector_name,
-                        'AWSName': []
+                        sector.sector_name: [{
+                            'AWSName':
+                                []
+                        }]
                     }
                     for aws in sector.aws_names:
                         aws_dict = {
-                            'AWS_Name': aws.aws_name,
-                            'Villages': []
+                            aws.aws_name:[{
+                                'Villages': []
+                            }]
                         }
                         for village in aws.villages:
                             vill_dict = {
                                 'Village/Town_Name': village.village_town_name
                             }
-                            aws_dict['Villages'].append(vill_dict)
-                        sector_dict['AWSName'].append(aws_dict)
-                    block_dict['Sectors'].append(sector_dict)
-                district_dict['Blocks'].append(block_dict)
-            state_dict['Districts'].append(district_dict)
+                            aws_dict[aws.aws_name][0]['Villages'].append(vill_dict)
+                        sector_dict[sector.sector_name][0]['AWSName'].append(aws_dict)
+                    block_dict[block.block_name][0]['Sectors'].append(sector_dict)
+                district_dict[district.district_name][0]['Blocks'].append(block_dict)
+            state_dict[state.state_name][0]['Districts'].append(district_dict)
         data.append(state_dict)
     return jsonify(data)
+
 
 
 if __name__ == "__main__":
