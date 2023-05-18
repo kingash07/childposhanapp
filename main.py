@@ -87,128 +87,128 @@ def homepage():
     return 'hello world'
 
 
-@app.route('/csvf')
-def csvs_files():
-    csv_data = pd.read_csv('Master Data.csv',
-                           usecols=["State Name", "District Name", "Project Name", "Sector", "AWC Name",
-                                    "Village Town"])
-
-    for index, row in csv_data.iterrows():
-        # get the district name from the 'State' column
-        state_name = string.capwords(row['State Name'])
-        # get the district name from the 'District' column
-        district_name = string.capwords(row['District Name'])
-        #   get the block name from the 'Block' column
-        block_name = string.capwords(row['Project Name'])
-        #   get the sector name from the 'Sector' column
-        sector_name = string.capwords(row['Sector'])
-        #   get the AWS name from the 'AWS Name' column
-        aws_name = string.capwords(row['AWC Name'])
-        #   get the village name from the 'AWS Name' column
-        village_name = string.capwords(str(row['Village Town']))
-        #   check if the state  already exists in the database, and create it if it doesn't
-        states = State.query.filter_by(state_name=state_name).first()
-        #   check if the district already exists in the database, and create it if it doesn't
-        district = District.query.filter_by(district_name=district_name).first()
-        #   check if the block already exists in the database, and create it if it doesn't
-        block = BlocksD.query.filter_by(block_name=block_name).first()
-        #   check if the sector already exists in the database, and create it if it doesn't
-        sector = Sector.query.filter_by(sector_name=sector_name).first()
-        #   check if the AWS name already exists in the database, and create it if it doesn't
-        aws = AWSName.query.filter_by(aws_name=aws_name).first()
-        #   check if the village name already exists in the database, and create it if it doesn't
-        village = Village.query.filter_by(village_town_name=village_name).first()
-        if states:
-            if district:
-                if block:
-                    if sector:
-                        aws = AWSName(aws_name=aws_name, sector_id=sector.id)
-                        db.session.add(aws)
-                        db.session.commit()
-                        db.session.refresh(aws)
-                        village = Village(village_town_name=village_name,  aws_id=aws.id)
-                        db.session.add(village)
-                        db.session.commit()
-                        db.session.refresh(village)
-                    else:
-                        sector = Sector(sector_name=sector_name, blocks_D_id=block.id)
-                        db.session.add(sector)
-                        db.session.commit()
-                        db.session.refresh(sector)
-                        aws = AWSName(aws_name=aws_name, sector_id=sector.id)
-                        db.session.add(aws)
-                        db.session.commit()
-                        db.session.refresh(aws)
-                        village = Village(village_town_name=village_name,  aws_id=aws.id)
-                        db.session.add(village)
-                        db.session.commit()
-                        db.session.refresh(village)
-
-                else:
-                    block = BlocksD(block_name=block_name, district_id=district.id)
-                    db.session.add(block)
-                    db.session.commit()
-                    db.session.refresh(block)
-                    sector = Sector(sector_name=sector_name, blocks_D_id=block.id)
-                    db.session.add(sector)
-                    db.session.commit()
-                    db.session.refresh(sector)
-                    aws = AWSName(aws_name=aws_name, sector_id=sector.id)
-                    db.session.add(aws)
-                    db.session.commit()
-                    db.session.refresh(aws)
-                    village = Village(village_town_name=village_name,  aws_id=aws.id)
-                    db.session.add(village)
-                    db.session.commit()
-                    db.session.refresh(village)
-            else:
-                district = District(district_name=district_name,  states_id=states.id)
-                db.session.add(district)
-                db.session.commit()
-                db.session.refresh(district)
-                block = BlocksD(block_name=block_name, district_id=district.id)
-                db.session.add(block)
-                db.session.commit()
-                db.session.refresh(block)
-                sector = Sector(sector_name=sector_name, blocks_D_id=block.id)
-                db.session.add(sector)
-                db.session.commit()
-                db.session.refresh(sector)
-                aws = AWSName(aws_name=aws_name,  sector_id=sector.id)
-                db.session.add(aws)
-                db.session.commit()
-                db.session.refresh(aws)
-                village = Village(village_town_name=village_name, aws_id=aws.id)
-                db.session.add(village)
-                db.session.commit()
-                db.session.refresh(village)
-        else:
-            state = State(state_name=state_name,)
-            db.session.add(state)
-            db.session.commit()
-            db.session.refresh(state)
-            district = District(district_name=district_name, states_id=state.id)
-            db.session.add(district)
-            db.session.commit()
-            db.session.refresh(district)
-            block = BlocksD(block_name=block_name, district_id=district.id)
-            db.session.add(block)
-            db.session.commit()
-            db.session.refresh(block)
-            sector = Sector(sector_name=sector_name, blocks_D_id=block.id)
-            db.session.add(sector)
-            db.session.commit()
-            db.session.refresh(sector)
-            aws = AWSName(aws_name=aws_name, sector_id=sector.id)
-            db.session.add(aws)
-            db.session.commit()
-            db.session.refresh(aws)
-            village = Village(village_town_name=village_name, aws_id=aws.id)
-            db.session.add(village)
-            db.session.commit()
-            db.session.refresh(village)
-    db.session.close()
-    return 'bangya re database'
+# @app.route('/csvf')
+# def csvs_files():
+#     csv_data = pd.read_csv('Master Data.csv',
+#                            usecols=["State Name", "District Name", "Project Name", "Sector", "AWC Name",
+#                                     "Village Town"])
+#
+#     for index, row in csv_data.iterrows():
+#         # get the district name from the 'State' column
+#         state_name = string.capwords(row['State Name'])
+#         # get the district name from the 'District' column
+#         district_name = string.capwords(row['District Name'])
+#         #   get the block name from the 'Block' column
+#         block_name = string.capwords(row['Project Name'])
+#         #   get the sector name from the 'Sector' column
+#         sector_name = string.capwords(row['Sector'])
+#         #   get the AWS name from the 'AWS Name' column
+#         aws_name = string.capwords(row['AWC Name'])
+#         #   get the village name from the 'AWS Name' column
+#         village_name = string.capwords(str(row['Village Town']))
+#         #   check if the state  already exists in the database, and create it if it doesn't
+#         states = State.query.filter_by(state_name=state_name).first()
+#         #   check if the district already exists in the database, and create it if it doesn't
+#         district = District.query.filter_by(district_name=district_name).first()
+#         #   check if the block already exists in the database, and create it if it doesn't
+#         block = BlocksD.query.filter_by(block_name=block_name).first()
+#         #   check if the sector already exists in the database, and create it if it doesn't
+#         sector = Sector.query.filter_by(sector_name=sector_name).first()
+#         #   check if the AWS name already exists in the database, and create it if it doesn't
+#         aws = AWSName.query.filter_by(aws_name=aws_name).first()
+#         #   check if the village name already exists in the database, and create it if it doesn't
+#         village = Village.query.filter_by(village_town_name=village_name).first()
+#         if states:
+#             if district:
+#                 if block:
+#                     if sector:
+#                         aws = AWSName(aws_name=aws_name, sector_id=sector.id)
+#                         db.session.add(aws)
+#                         db.session.commit()
+#                         db.session.refresh(aws)
+#                         village = Village(village_town_name=village_name,  aws_id=aws.id)
+#                         db.session.add(village)
+#                         db.session.commit()
+#                         db.session.refresh(village)
+#                     else:
+#                         sector = Sector(sector_name=sector_name, blocks_D_id=block.id)
+#                         db.session.add(sector)
+#                         db.session.commit()
+#                         db.session.refresh(sector)
+#                         aws = AWSName(aws_name=aws_name, sector_id=sector.id)
+#                         db.session.add(aws)
+#                         db.session.commit()
+#                         db.session.refresh(aws)
+#                         village = Village(village_town_name=village_name,  aws_id=aws.id)
+#                         db.session.add(village)
+#                         db.session.commit()
+#                         db.session.refresh(village)
+#
+#                 else:
+#                     block = BlocksD(block_name=block_name, district_id=district.id)
+#                     db.session.add(block)
+#                     db.session.commit()
+#                     db.session.refresh(block)
+#                     sector = Sector(sector_name=sector_name, blocks_D_id=block.id)
+#                     db.session.add(sector)
+#                     db.session.commit()
+#                     db.session.refresh(sector)
+#                     aws = AWSName(aws_name=aws_name, sector_id=sector.id)
+#                     db.session.add(aws)
+#                     db.session.commit()
+#                     db.session.refresh(aws)
+#                     village = Village(village_town_name=village_name,  aws_id=aws.id)
+#                     db.session.add(village)
+#                     db.session.commit()
+#                     db.session.refresh(village)
+#             else:
+#                 district = District(district_name=district_name,  states_id=states.id)
+#                 db.session.add(district)
+#                 db.session.commit()
+#                 db.session.refresh(district)
+#                 block = BlocksD(block_name=block_name, district_id=district.id)
+#                 db.session.add(block)
+#                 db.session.commit()
+#                 db.session.refresh(block)
+#                 sector = Sector(sector_name=sector_name, blocks_D_id=block.id)
+#                 db.session.add(sector)
+#                 db.session.commit()
+#                 db.session.refresh(sector)
+#                 aws = AWSName(aws_name=aws_name,  sector_id=sector.id)
+#                 db.session.add(aws)
+#                 db.session.commit()
+#                 db.session.refresh(aws)
+#                 village = Village(village_town_name=village_name, aws_id=aws.id)
+#                 db.session.add(village)
+#                 db.session.commit()
+#                 db.session.refresh(village)
+#         else:
+#             state = State(state_name=state_name,)
+#             db.session.add(state)
+#             db.session.commit()
+#             db.session.refresh(state)
+#             district = District(district_name=district_name, states_id=state.id)
+#             db.session.add(district)
+#             db.session.commit()
+#             db.session.refresh(district)
+#             block = BlocksD(block_name=block_name, district_id=district.id)
+#             db.session.add(block)
+#             db.session.commit()
+#             db.session.refresh(block)
+#             sector = Sector(sector_name=sector_name, blocks_D_id=block.id)
+#             db.session.add(sector)
+#             db.session.commit()
+#             db.session.refresh(sector)
+#             aws = AWSName(aws_name=aws_name, sector_id=sector.id)
+#             db.session.add(aws)
+#             db.session.commit()
+#             db.session.refresh(aws)
+#             village = Village(village_town_name=village_name, aws_id=aws.id)
+#             db.session.add(village)
+#             db.session.commit()
+#             db.session.refresh(village)
+#     db.session.close()
+#     return 'bangya re database'
 
 
 # # index page
