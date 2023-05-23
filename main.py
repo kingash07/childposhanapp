@@ -83,24 +83,44 @@ class Village(db.Model, Base):
     aws_id = db.Column('aws_id', db.Integer, db.ForeignKey('awsname.id'), nullable=False)
 
 
-# create custom page for admin panel
-# class CustomAdminView(BaseView):
-#     @expose('/')
-#     def index(self):
-#         # Custom logic goes here
-#         return self.render('custom_admin_page.html')
+# Create custom page for admin panel
+# class CustomAd v self.render('custom_admin_page.html')
+
+
+class AwcUser(db.Model, Base):
+    __tablename__ = 'awsuser'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(250),  unique=True, nullable=False)
+    password = db.Column(db.String(250), nullable=False)
+#   connect with child data
+#   connect to the village
+
+
+class ChildData(db.Model, Base):
+    __tablename__ = 'childdata'
+    id = db.Column(db.Integer, primary_key=True)
+    child_name = db.Column(db.String(250), nullable=False)
+    f_name = db.Column(db.String(250), nullable=False)
+    m_name = db.Column(db.String(250), nullable=False)
+    gender = db.Column(db.String(250), nullable=False)
+    dob = db.Column(db.Date, nullable=False)
+    height = db.Column(db.Float, nullable=False)
+    weight = db.Column(db.Float, nullable=False)
+    address = db.Column(db.String(250), nullable=False)
+    pin = db.Column(db.Integer, nullable=False)
+    p_number = db.Column(db.Integer, nullable=False)
 
 
 if not os.path.isfile('sqlite:///childposhandata.db'):
     with app.app_context():
         db.create_all()
 
-# admin.add_view(ModelView(State, db.session))
-# admin.add_view(ModelView(District, db.session))
-# admin.add_view(ModelView(BlocksD, db.session))
-# admin.add_view(ModelView(Sector, db.session))
-# admin.add_view(ModelView(AWSName, db.session))
-# admin.add_view(ModelView(Village, db.session))
+admin.add_view(ModelView(State, db.session))
+admin.add_view(ModelView(District, db.session))
+admin.add_view(ModelView(BlocksD, db.session))
+admin.add_view(ModelView(Sector, db.session))
+admin.add_view(ModelView(AWSName, db.session))
+admin.add_view(ModelView(Village, db.session))
 
 
 @app.route('/')
