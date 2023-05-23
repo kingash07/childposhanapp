@@ -8,6 +8,9 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_admin import BaseView, expose
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -16,7 +19,10 @@ Base = declarative_base()
 # CONNECT TO DB
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///childposhandata.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['FlASK_ADMIN_SWATCH'] = 'cerulean'
 db = SQLAlchemy(app)
+
+admin = Admin(app, name='Child Poshan App', template_mode='bootstrap4')
 
 
 # CONFIGURE STATE TABLE
@@ -77,9 +83,24 @@ class Village(db.Model, Base):
     aws_id = db.Column('aws_id', db.Integer, db.ForeignKey('awsname.id'), nullable=False)
 
 
+# create custom page for admin panel
+# class CustomAdminView(BaseView):
+#     @expose('/')
+#     def index(self):
+#         # Custom logic goes here
+#         return self.render('custom_admin_page.html')
+
+
 if not os.path.isfile('sqlite:///childposhandata.db'):
     with app.app_context():
         db.create_all()
+
+# admin.add_view(ModelView(State, db.session))
+# admin.add_view(ModelView(District, db.session))
+# admin.add_view(ModelView(BlocksD, db.session))
+# admin.add_view(ModelView(Sector, db.session))
+# admin.add_view(ModelView(AWSName, db.session))
+# admin.add_view(ModelView(Village, db.session))
 
 
 @app.route('/')
