@@ -8,9 +8,10 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
-from flask_admin import BaseView, expose
+# from flask_bootstrap import Bootstrap5
+# from flask_admin import Admin
+# from flask_admin.contrib.sqla import ModelView
+# from flask_admin import BaseView, expose
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -22,7 +23,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['FlASK_ADMIN_SWATCH'] = 'cerulean'
 db = SQLAlchemy(app)
 
-admin = Admin(app, name='Child Poshan App', template_mode='bootstrap4')
+
+# admin = Admin(app, name='Child Poshan App', template_mode='bootstrap4')
 
 
 # CONFIGURE STATE TABLE
@@ -90,7 +92,7 @@ class Village(db.Model, Base):
 class AwcUser(db.Model, Base):
     __tablename__ = 'awsuser'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(250),  unique=True, nullable=False)
+    username = db.Column(db.String(250), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)
 #   connect with child data
 #   connect to the village
@@ -115,12 +117,12 @@ if not os.path.isfile('sqlite:///childposhandata.db'):
     with app.app_context():
         db.create_all()
 
-admin.add_view(ModelView(State, db.session))
-admin.add_view(ModelView(District, db.session))
-admin.add_view(ModelView(BlocksD, db.session))
-admin.add_view(ModelView(Sector, db.session))
-admin.add_view(ModelView(AWSName, db.session))
-admin.add_view(ModelView(Village, db.session))
+# admin.add_view(ModelView(State, db.session))
+# admin.add_view(ModelView(District, db.session))
+# admin.add_view(ModelView(BlocksD, db.session))
+# admin.add_view(ModelView(Sector, db.session))
+# admin.add_view(ModelView(AWSName, db.session))
+# admin.add_view(ModelView(Village, db.session))
 
 
 @app.route('/')
@@ -128,6 +130,9 @@ def homepage():
     return 'hello world'
 
 
+@app.route('/index')
+def index():
+    return render_template('index.html')
 # @app.route('/csvf')
 # def csvs_files():
 #     csv_data = pd.read_csv('Master Data.csv',
